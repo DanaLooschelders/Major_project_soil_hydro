@@ -47,7 +47,7 @@ calc_swc<-function(P, ET, init_swc, max_swc, k) {
   swc<-data.frame("change"=rep(NA, length(P))) #output dataframe for the changing soil water
   swc$sum<-rep(NA, length(P)) #output for total soil water content
   swc$sum[1]<-init_swc #initial soil water content
-  swc$change[1]<-0
+  swc$change[1]<-0 #initial change is zero
   swc$runoff<-rep(NA, length(P)) #output for excess soil water (runoff)
   for(i in 2:length(swc$sum)){ #soil water content from day 2
     temp_Q<-swc$sum[i-1]*k*(swc$sum[i-1]/max_swc)^2 #calculate value for Q
