@@ -4,6 +4,10 @@
 
 library(tidyverse)
 
+# convert ET from mmol/m2/s1 to mm/30 min. for 30 min. data
+dfs <- Filter(function(x) nrow(x)>17000&&nrow(x)<18000, mget(ls())) #get all dataframes with 30min values
+for(i in 1:length(dfs)){ dfs[[i]]$Evapotr<-(dfs[[i]]$Evapotr* 10^-3 * 18.02)/1000*30*60} #convert
+list2env(dfs ,.GlobalEnv) #unlist again in environment
 
 # convert ET from mmol/m2/s1 to mm/30 min. for 30 min. data
 H_1999_30$Evapotr <- (H_1999_30$Evapotr * 10^-3 * 18.02)/1000*30*60
