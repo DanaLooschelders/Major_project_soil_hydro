@@ -1,8 +1,7 @@
 library(ggplot2)
 
 #add column with date
-swc$date<-paste(rep(1999, length(Hyytiala1999day$Year)), Hyytiala1999day$Month, Hyytiala1999day$Day)
-swc$date<-strptime(swc$date, format="%Y %m %d")
+swc$date<-Hyytiala_all_day$date
 swc$date<-as.POSIXct(swc$date)
 
 ####soil water change####
