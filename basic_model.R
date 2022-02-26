@@ -31,7 +31,7 @@ calc_swc<-function(P, ET, max_swc, k) {
 return(swc)}
 
 #test model
-swc<-calc_swc(P=Hyytiala1999day$Prec, ET=Hyytiala1999day$Evapotr, 
+swc<-calc_swc(P=Hyytiala_all_day$Prec, ET=Hyytiala_all_day$Evapotr, 
                max_swc=33.5, k=0.5)
 #testplot results
 plot(swc$change, type="l") 
