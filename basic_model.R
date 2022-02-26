@@ -33,7 +33,7 @@ return(swc)}
 #test model
 swc<-calc_swc(P=Hyytiala1999day$Prec, ET=Hyytiala1999day$Evapotr, 
                max_swc=33.5, k=0.5)
-#plot results
+#testplot results
 plot(swc$change, type="l") 
 plot(swc$sum, type="l")
 abline(h = 33.5, col="red")
