@@ -26,3 +26,7 @@ ggplot(data=swc)+
   theme_bw()+
   theme(text=element_text(size=10), legend.position = "bottom")
 ggsave(filename="Hyytiala_sw_content.jpg", width = 20, height=12, units = "cm")
+
+####observed vs simulated swc####
+plot(swc$sum/h, Hyytiala_all_day$SWC20, xlim=c(0,0.55), ylim=c(0,0.55))
+

@@ -7,6 +7,9 @@ calc_swc<-function(P, ET, max_swc, k) {
                   "sum"=rep(NA, length(P)),
                   "runoff"=rep(NA, length(P))) #output dataframe for the changing soil water
   swc$sum[1]<- P[1] - ET [1] #initial soil water content
+  if (swc$sum[1] > max_swc) {
+    swc$sum[1] = max_swc
+  }
   swc$change[1]<-0 #initial change is zero
   for(i in 2:length(swc$sum)){ #soil water content from day 2
     temp_Q<-swc$sum[i-1]*k*(swc$sum[i-1]/max_swc)^2 #calculate value for Q
@@ -14,11 +17,11 @@ calc_swc<-function(P, ET, max_swc, k) {
     {
      swc$change[i]<- P[i] - temp_Q - ET[i] #calculate change in soil water
      swc$sum[i]<-swc$sum[i-1]+swc$change[i] #add change to sum
-     if(swc$sum[i]<0){ #if the sums turns negativ
+     if(swc$sum[i]<0){ #if the sums turns negative
        swc$sum[i]=0 #set sum to zero
-     }else if(swc$sum[i]>max_swc){ #if the sum exeeds max_swc 
+     }else if(swc$sum[i]>max_swc){ #if the sum exceeds max_swc 
        swc$sum[i]=max_swc #set sum to swc max
-     } else{}#if sum positiv and less than swc max, do nothing
+     } else{}#if sum positive and less than swc max, do nothing
     }else{ #if water available for swc is more than or equal to max swc
       #calculate change until max_swc is reached
       swc$change[i]<-max_swc-swc$sum[i-1] #calculate the maximum possible change 
@@ -30,9 +33,14 @@ calc_swc<-function(P, ET, max_swc, k) {
   }
 return(swc)}
 
+# define constants
+h = 200 # set soil depth in mm
+max_swc_H = 0.29 # max swc in m3/m3 for Hyytiala
+
 #test model
-swc<-calc_swc(P=Hyytiala_all_day$Prec, ET=Hyytiala_all_day$Evapotr, 
-               max_swc=33.5, k=0.5)
+swc<-calc_swc(P=Hyytiala_all_day$Prec, ET=Hyytiala_all_day$Evapotr,
+               max_swc=max_swc_H*h, k=0.5)
+
 #testplot results
 plot(swc$change, type="l") 
 plot(swc$sum, type="l")
