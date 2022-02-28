@@ -3,6 +3,8 @@ snow_accumulation <- function(T_u, T_lf, T_lm, k_m, T, P) {
                   "size"=rep(NA, length(T)),
                   "melt"=rep(NA, length(T)), 
                   "rain"=rep(NA,length(T))) #output dataframe for the changing snowpack
+ #change intial value for snowpack
+  snowpack$size[1]<-1
   
   for (i in 1:length(T)) {
     # calculate snowpack accumulation and size
@@ -71,4 +73,8 @@ max_swc_H = 0.55 # max swc in % for Hyytiala
 
 #test model
 swc<-calc_swc_M(P=snowpack$rain, M=snowpack$melt, ET=Hyytiala_all_day$Evapotr,
-              max_swc=max_swc_H*h, k=1.3)
+              max_swc=max_swc_H*h*2, k=1.3)
+#add column with date
+swc$date<-Hyytiala_all_day$date
+swc$date<-as.POSIXct(swc$date)
+swc$obs<-Hyytiala_all_day$SWC20 #add observations to sim data
