@@ -41,6 +41,12 @@ max_swc_H = 0.29 # max swc in m3/m3 for Hyytiala
 swc<-calc_swc(P=Hyytiala_all_day$Prec, ET=Hyytiala_all_day$Evapotr,
                max_swc=max_swc_H*h, k=0.5)
 
+#add column with date
+swc$date<-Hyytiala_all_day$date
+swc$date<-as.POSIXct(swc$date)
+swc$obs<-Hyytiala_all_day$SWC20 #add observations to sim data
+
+
 #testplot results
 plot(swc$change, type="l") 
 plot(swc$sum, type="l")

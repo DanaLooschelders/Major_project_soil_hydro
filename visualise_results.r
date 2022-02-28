@@ -1,9 +1,5 @@
 library(ggplot2)
 
-#add column with date
-swc$date<-Hyytiala_all_day$date
-swc$date<-as.POSIXct(swc$date)
-
 ####soil water change####
 #plot
 ggplot(data=swc)+
@@ -30,3 +26,21 @@ ggsave(filename="Hyytiala_sw_content.jpg", width = 20, height=12, units = "cm")
 ####observed vs simulated swc####
 plot(swc$sum/h, Hyytiala_all_day$SWC20, xlim=c(0,0.55), ylim=c(0,0.55))
 
+#plot  modelled and onbserved fluxes as time series
+ggplot(data=swc)+
+  geom_line(aes(x=date, y=sum/h, color="Simulatated"), alpha=0.8)+
+  geom_line(aes(x=date, y=obs, color="Observed"))+
+    labs(color="")+
+  scale_color_manual(values = c("black","darkblue"))+
+  xlab(label="Date")+
+  ylab(label="Soil water content [mm]")+
+  ggtitle(label="Soil water content in Hyytiala", subtitle="1999 to 2001")+
+  theme_bw()+
+  theme(text=element_text(size=10), legend.position = "bottom")
+ggsave(filename="Hyytiala_sw_obs_sim.jpg",  width = 20, height=12, units = "cm")
+
+#plot linear regression
+ggplot(data=swc,aes(x=sum/h, y=obs))+
+  geom_point()+
+  geom_smooth(method="lm")+
+  theme_bw()

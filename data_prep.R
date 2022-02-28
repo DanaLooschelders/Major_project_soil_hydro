@@ -29,12 +29,4 @@ for(i in 1:length(dfs)){ dfs[[i]]$Evapotr<-(dfs[[i]]$Evapotr* 10^-3 * 18.02)/100
 list2env(dfs ,.GlobalEnv) #unlist again in environment
 rm(dfs) #remove temp list
 
-# convert ET from mmol/m2/s1 to mm/30 min. for 30 min. data
-H_1999_30$Evapotr <- (H_1999_30$Evapotr * 10^-3 * 18.02)/1000*30*60
-H_2000_30$Evapotr <- (H_2000_30$Evapotr * 10^-3 * 18.02)/1000*30*60
-H_2001_30$Evapotr <- (H_2001_30$Evapotr * 10^-3 * 18.02)/1000*30*60
-
-N_1997_30$Evapotr <- (N_1997_30$Evapotr * 10^-3 * 18.02)/1000*30*60
-N_1999_30$Evapotr <- (N_1999_30$Evapotr * 10^-3 * 18.02)/1000*30*60
-N_2001_30$Evapotr <- (N_2001_30$Evapotr * 10^-3 * 18.02)/1000*30*60
 
