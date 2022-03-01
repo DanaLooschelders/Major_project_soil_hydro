@@ -1,32 +1,38 @@
 snow_accumulation <- function(T_u, T_lf, T_lm, k_m, T, P) {
   snowpack<-data.frame("accumulation"=rep(NA, length(T)), 
                   "size"=rep(NA, length(T)),
-                  "melt"=rep(NA, length(T)), 
+                  "theo_melt"=rep(NA, length(T)),
+                  "actual_melt"=rep(NA, length(T)),
                   "rain"=rep(NA,length(T))) #output dataframe for the changing snowpack
- #change intial value for snowpack
-  snowpack$size[1]<-1
   
   for (i in 1:length(T)) {
     # calculate snowpack accumulation and size
     if (T_lm >= T[i]) {
-      snowpack$melt[i] <- 0 
+      snowpack$theo_melt[i] <- 0 
     } else {
-      snowpack$melt[i] <- k_m*(T[i]-T_lm)
+      snowpack$theo_melt[i] <- k_m*(T[i]-T_lm)
     }
     if (T[i] >= T_u) {
       snowpack$accumulation[i] <- 0
       snowpack$rain[i] <- P[i]
     } else if (T[i] > T_lf & T[i] < T_u) {
       snowpack$accumulation[i] <- P[i]*((T_u-T[i])/(T_u-T_lf))
-      snowpack$rain[i] <- snowpack$accumulation[i]
+      snowpack$rain[i] <- P[i] - snowpack$accumulation[i]
     } else {
       snowpack$accumulation[i] <- P[i]
       snowpack$rain[i] <- 0
     }
   }
-  snowpack$size[1]<- 0 #initial snowpack size to 0 mm
+  snowpack$size[1]<- 50 #initial snowpack size to 0 mm
   for (i in 2:length(T)) {
-    snowpack$size[i] <- snowpack$size[i-1] + snowpack$accumulation[i]-snowpack$melt[i]
+    snowpack$size[i] <- snowpack$size[i-1] + snowpack$accumulation[i]
+    if (snowpack$theo_melt[i] > snowpack$size[i]) {
+      snowpack$actual_melt[i] <- snowpack$size[i]
+      snowpack$size[i] <- 0
+    } else {
+      snowpack$actual_melt[i] <- snowpack$theo_melt[i]
+      snowpack$size[i] <- snowpack$size[i-1] + snowpack$accumulation[i] - snowpack$actual_melt[i]
+    }
     if (snowpack$size[i] < 0) {
       snowpack$size[i] <- 0
     }
@@ -34,13 +40,13 @@ snow_accumulation <- function(T_u, T_lf, T_lm, k_m, T, P) {
   return(snowpack)
 }
 
-snowpack <- snow_accumulation(T_u=5, T_lf=-7, T_lm=0, k_m=4, T=Hyytiala_all_day$AirT, P=Hyytiala_all_day$Prec)
+snowpack <- snow_accumulation(T_u=5, T_lf=-7, T_lm=-14, k_m=4, T=Hyytiala_all_day$AirT, P=Hyytiala_all_day$Prec)
 
 calc_swc_M<-function(P, M, ET, max_swc, k) {
   swc<-data.frame("change"=rep(NA, length(P)), 
                   "sum"=rep(NA, length(P)),
                   "runoff"=rep(NA, length(P))) #output dataframe for the changing soil water
-  swc$sum[1]<- P[1] - ET [1] #initial soil water content
+  swc$sum[1]<- 0.4*200 #initial soil water content
   if (swc$sum[1] > max_swc) {
     swc$sum[1] = max_swc
   }
@@ -69,12 +75,13 @@ calc_swc_M<-function(P, M, ET, max_swc, k) {
 
 # define constants
 h = 200 # set soil depth in mm
-max_swc_H = 0.55 # max swc in % for Hyytiala
+max_swc_H = 0.5 # max swc in % for Hyytiala
 
 #test model
-swc<-calc_swc_M(P=snowpack$rain, M=snowpack$melt, ET=Hyytiala_all_day$Evapotr,
-              max_swc=max_swc_H*h*2, k=1.3)
+swc<-calc_swc_M(P=snowpack$rain, M=snowpack$actual_melt, ET=Hyytiala_all_day$Evapotr,
+              max_swc=max_swc_H*h, k=0.02)
 #add column with date
 swc$date<-Hyytiala_all_day$date
 swc$date<-as.POSIXct(swc$date)
 swc$obs<-Hyytiala_all_day$SWC20 #add observations to sim data
+
