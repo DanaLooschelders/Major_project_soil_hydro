@@ -80,8 +80,8 @@ max_swc_H = max(Hyytiala_all_day$SWC20) # max swc in % for Hyytiala
 min_swc_H =min(Hyytiala_all_day$SWC20)
 #test model
 swc<-calc_swc_M(Precip=Hyytiala_all_day$Prec, ET=Hyytiala_all_day$Evapotr,
-              max_swc=max_swc_H*1000, k=0.005, min_swc=min_swc_H*1000, T_u=5, 
-              T_lf=-7, T_lm=-5, k_m=0.6, T=Hyytiala_all_day$AirT, init_snowsize=0)
+              max_swc=max_swc_H*1000, k=0.2, min_swc=min_swc_H*1000, T_u=4, 
+              T_lf=2, T_lm=2, k_m=5, T=Hyytiala_all_day$AirT, init_snowsize=0)
 
 #add column with date
 swc$date<-Hyytiala_all_day$date

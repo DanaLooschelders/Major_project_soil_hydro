@@ -65,3 +65,7 @@ for(i in 1:dim(optimal_snow)[1]){
     optimal_snow$RMSE[i]<-sqrt(mean((swc_temp$obs - swc_temp$sum)^2))
   }
 
+optimal_values<-optimal_snow[which.min(optimal_snow$RMSE),]
+optimal_values_order<-optimal_snow[order(optimal_snow$RMSE),]
+optimal_values_nonzero<-optimal_values_order[optimal_values_order$kmvalue>0&optimal_values_order$kvalues>0,]
+head(optimal_values_nonzero, n = 5)
