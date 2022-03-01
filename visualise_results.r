@@ -14,7 +14,7 @@ ggsave(filename="Hyytiala_sw_change.jpg", width = 20, height=12, units = "cm")
 #####soil water####
 ggplot(data=swc)+
   geom_line(aes(x=date, y=sum), color="darkblue")+
-  geom_hline(aes(yintercept=33.5, col="max water content"))+
+  geom_hline(aes(yintercept=335, col="max water content"))+
   labs(color="")+
   xlab(label="Date")+
   ylab(label="Soil water content [mm]")+
@@ -28,7 +28,7 @@ plot(swc$sum/h, Hyytiala_all_day$SWC20, xlim=c(0,0.55), ylim=c(0,0.55))
 
 #plot  modelled and onbserved fluxes as time series
 ggplot(data=swc)+
-  geom_line(aes(x=date, y=sum/h, color="Simulatated"), alpha=0.8)+
+  geom_line(aes(x=date, y=sum/1000, color="Simulatated"), alpha=0.8)+
   geom_line(aes(x=date, y=obs, color="Observed"))+
     labs(color="")+
   scale_color_manual(values = c("black","darkblue"))+
@@ -43,4 +43,9 @@ ggsave(filename="Hyytiala_sw_obs_sim.jpg",  width = 20, height=12, units = "cm")
 ggplot(data=swc,aes(x=sum/h, y=obs))+
   geom_point()+
   geom_smooth(method="lm")+
+  theme_bw()
+
+snowpack$date<-Hyytiala_all_day$date
+ggplot(data=snowpack, aes(x=date, y=size))+
+  geom_line()+
   theme_bw()
