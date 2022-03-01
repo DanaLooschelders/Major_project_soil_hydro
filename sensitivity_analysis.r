@@ -26,6 +26,10 @@ ggplot(data=swc)+
   ggtitle(label="Soil water content in Hyytiala", subtitle="1999 to 2001")+
   theme_bw()+
   theme(text=element_text(size=10), legend.position = "bottom")
+range(swc$Q, na.rm=T)
+
+plot(swc$snowsize, type="l")
+plot(Hyytiala_all_day$AirT, type="l")
 
 #
 snowpack$date<-Hyytiala_all_day$date
