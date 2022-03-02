@@ -52,3 +52,28 @@ ggplot(data=snowpack, aes(x=date, y=size))+
 
 range(swc$runoff)
 plot(swc$runoff, type="l")
+
+soilwaterchange_obs<-diff(Hyytiala_all_day$SWC20)
+swc$obs_change<-NA
+swc$obs_change[2:length(swc$obs_change)]<-diff(Hyytiala_all_day$SWC20)
+plot(soilwaterchange_obs, type="l")
+mean(abs(soilwaterchange_obs))
+
+max(swc$change/1000)
+#plot modelled and observed changes together with rain
+ggplot()+
+  geom_line(data=swc, aes(x=date, y=change/1000, col="modelled"),show.legend = T)+
+  geom_line(data=swc, aes(x=date, y=obs_change, col="observed"))+
+  #geom_line(data=swc, aes(x=date, y=rain/100, col="rain"), alpha=0.4)+
+  theme_bw()
+#plot modelled and obs soil water together with rain
+ggplot(data=swc)+
+  geom_line(aes(x=date, y=sum/1000, col="modelled"))+
+  geom_line(aes(x=date, y=obs, col="obs"))+
+  geom_line(aes(x=date, y=rain/100, col="rain"))+
+  geom_hline(yintercept = max_swc_H)+
+  theme_bw()
+
+#calculate ratio max soil water and max soil water change
+max(diff(Hyytiala_all_30$SWC20))/max(Hyytiala_all_day$SWC20)*100
+max(swc$change)/max(swc$sum)*100

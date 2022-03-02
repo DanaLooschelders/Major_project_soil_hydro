@@ -1,5 +1,5 @@
 
-calc_swc_M<-function(M, ET, max_swc, min_swc, k, T_u, T_lf, T_lm, k_m, T, Precip, init_snowsize) {
+calc_swc_M<-function(M, ET, max_swc, min_swc, k, T_u, T_lf, T_lm, k_m, T, Precip, init_snowsize, ET_change) {
   #calculate snowpack
   snowpack<-data.frame("accumulation"=rep(NA, length(T)), 
                        "size"=rep(NA, length(T)),
@@ -48,7 +48,8 @@ calc_swc_M<-function(M, ET, max_swc, min_swc, k, T_u, T_lf, T_lm, k_m, T, Precip
                   "runoff"=rep(NA, length(snowpack$rain)),
                   "snowsize"=snowpack$size,
                   "snowmelt"=snowpack$actual_melt,
-                  "snowaccumulation"=snowpack$accumulation) #output dataframe for the changing soil water
+                  "snowaccumulation"=snowpack$accumulation,
+                  "rain"=snowpack$rain) #output dataframe for the changing soil water
   swc$sum[1]<- 400 #initial soil water content
   if (swc$sum[1] > max_swc) {
     swc$sum[1] = max_swc
@@ -85,8 +86,8 @@ swc<-calc_swc_M(Precip=Hyytiala_all_day$Prec, ET=Hyytiala_all_day$Evapotr,
               max_swc=max_swc_H*1000, k=0.005, min_swc=min_swc_H*1000, T_u=4, 
               T_lf=2, T_lm=-4, k_m=6, T=Hyytiala_all_day$AirT, init_snowsize=0,
               ET_change=0.7)
+
 #maximum infiltration
-#does it rain on snow
 plot(Hyytiala_all_day$Evapotr, type="l")
 Hyytiala_all_day$newEvap<-Hyytiala_all_day[which(snowpack$size==0),]+0.7
 
@@ -95,5 +96,4 @@ swc$date<-Hyytiala_all_day$date
 swc$date<-as.POSIXct(swc$date)
 swc$obs<-Hyytiala_all_day$SWC20 #add observations to sim data
 
-plot(swc$date, swc$snowsize, type="l")
 
