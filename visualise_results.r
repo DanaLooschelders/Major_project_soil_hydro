@@ -49,3 +49,6 @@ snowpack$date<-Hyytiala_all_day$date
 ggplot(data=snowpack, aes(x=date, y=size))+
   geom_line()+
   theme_bw()
+
+range(swc$runoff)
+plot(swc$runoff, type="l")

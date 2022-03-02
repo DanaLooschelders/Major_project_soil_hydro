@@ -40,7 +40,7 @@ ggsave(filename="RMSE_k_m.jpg", width = 20, height=12, units = "cm")
 
 range(Hyytiala_all_day$AirT)
 
-#####
+#####tune for all variables#####
 tuvalues<-seq(-2, 7, by=1) #max temp above which is precipitation
 tlfvalues<-seq(-9, 2, by=1) #lower limit below preci will be snow
 tlmvalues<-seq(-15, 2, by=1) #temp limit above which snow can melt
