@@ -55,7 +55,7 @@ calc_swc_M<-function(M, ET, max_swc, min_swc, k, T_u, T_lf, T_lm, k_m, T, Precip
   for(i in 2:length(swc$sum)){ #soil water content from day 2
     temp_Q<-swc$sum[i-1]*k*(swc$sum[i-1]/max_swc)^2 #calculate value for Q
     swc$Q[i]<-temp_Q
-    if(max_swc > snowpack$rain[i] + snowpack$actual_melt[i] - temp_Q - ET[i]) # water available for swc is less than max_swc
+    if(max_swc > swc$sum[i-1] + snowpack$rain[i] + snowpack$actual_melt[i] - temp_Q - ET[i]) # water available for swc is less than max_swc
     {
       swc$change[i]<- snowpack$rain[i] + snowpack$actual_melt[i] - temp_Q - ET[i] #calculate change in soil water
       swc$sum[i]<-swc$sum[i-1]+swc$change[i] #add change to sum
@@ -80,8 +80,8 @@ max_swc_H = max(Hyytiala_all_day$SWC20) # max swc in % for Hyytiala
 min_swc_H =min(Hyytiala_all_day$SWC20)
 #test model
 swc<-calc_swc_M(Precip=Hyytiala_all_day$Prec, ET=Hyytiala_all_day$Evapotr,
-              max_swc=max_swc_H*1000, k=0.2, min_swc=min_swc_H*1000, T_u=4, 
-              T_lf=2, T_lm=2, k_m=5, T=Hyytiala_all_day$AirT, init_snowsize=0)
+              max_swc=max_swc_H*1000, k=0.005, min_swc=min_swc_H*1000, T_u=4, 
+              T_lf=2, T_lm=0, k_m=3, T=Hyytiala_all_day$AirT, init_snowsize=0)
 
 #add column with date
 swc$date<-Hyytiala_all_day$date
@@ -89,3 +89,4 @@ swc$date<-as.POSIXct(swc$date)
 swc$obs<-Hyytiala_all_day$SWC20 #add observations to sim data
 
 plot(swc$date, swc$snowsize, type="l")
+
