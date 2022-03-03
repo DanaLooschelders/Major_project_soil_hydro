@@ -11,7 +11,7 @@ for(i in cols){
   #calculate sample correlation coefficient
   sens$cor<-round(cor(swc$change, swc[,i]), 2) #round to two digits
   #sensitivity coefficient
-  plot((swc$change-mean(swc$change, na.rm=T))/(swc[,i]-mean(swc[,i], na.rm=T)), type="l")
+  #plot((swc$change-mean(swc$change, na.rm=T))/(swc[,i]-mean(swc[,i], na.rm=T)), type="l")
   #sensitivity index
   (max(swc$change[max(swc[,i]])-min(swc$change[max(swc[,i]]))/max(swc$change[max(swc[,i]])
 }
