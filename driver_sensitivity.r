@@ -46,18 +46,27 @@ ggplot(data=temp_output_long, aes(y=value, x=as.factor(variable)))+
 coefs_temp<-data.frame("scenario"=temp_var, "coef"=NA, "corr"=NA)
 for(i in 1:length(temp_var)){
   temp<-lm(temp_input[,i]~temp_output[,i]) #calculate lm
-  coefs_temp$coef[i]<-temp$coefficients[2] #extract coef
-  coefs_temp$corr[i]<-cor(temp_input[,i],temp_output[,i]) #calculate corr
+  coefs_temp$coef[i]<-round(temp$coefficients[2],2)#extract coef
+  coefs_temp$corr[i]<-round(cor(temp_input[,i],temp_output[,i]),2) #calculate corr
 }
-
+coefs_temp$coef_label<-paste("lm coef:", coefs_temp$coef) #create annotation for coef
+coefs_temp$corr_label<-paste("cor:", coefs_temp$corr) #create annotation for corr
+label_temp_scenario<-paste("Temp. change:", coefs_temp$scenario, "°C")#create label for facet
+names(label_temp_scenario)<-as.character(coefs_temp$scenario)
 #plot regression for every scenario
 ggplot(data=temp_whole, aes(x=input, y=output))+
   geom_jitter()+
   stat_smooth(method="lm")+
+  geom_text(data = coefs_temp, aes(x = -15,  y = 160, label = coef_label), size=3) +
+  geom_text(data = coefs_temp, aes(x = -15,  y = 190, label = corr_label), size=3) +
   xlab(label="Temperature [°C]")+
+  ggtitle(label="Change in soil water content with changing temperature")+
   ylab(label="Soil water Content [mm]")+
-  facet_wrap(~scenario, )+
+  theme(strip.text.x = element_text(size = 5))+
+  facet_wrap(~scenario, 
+             labeller=labeller(scenario=label_temp_scenario))+
   theme_bw()
+ggsave(filename="Temperature_sensitivity.jpg", width = 20, height=12, units = "cm")
 
 ####Precipitation####
 #vary precipitation in between -50% and + 50% 
@@ -108,15 +117,23 @@ ggplot(data=prec_output_long, aes(y=value, x=as.factor(variable)))+
 coefs_prec<-data.frame("scenario"=prec_var, "coef"=NA, "corr"=NA)
 for(i in 1:length(prec_var)){
   temp<-lm(prec_input[,i]~prec_output[,i]) #calculate lm
-  coefs_prec$coef[i]<-temp$coefficients[2] #extract coef
-  coefs_prec$corr[i]<-cor(prec_input[,i],prec_output[,i]) #calculate corr
+  coefs_prec$coef[i]<-round(temp$coefficients[2], 2) #extract coef
+  coefs_prec$corr[i]<-round(cor(prec_input[,i],prec_output[,i]),2) #calculate corr
 }
-
+coefs_prec$coef_label<-paste("lm coef:", coefs_prec$coef)
+coefs_prec$corr_label<-paste("cor:", coefs_prec$corr)
+label_prec_scenario<-paste("Prec. change:", coefs_prec$scenario*100, "%")#create label for facet
+names(label_prec_scenario)<-as.character(coefs_prec$scenario)
 #plot regression for every scenario
 ggplot(data=prec_whole, aes(x=input, y=output))+
   geom_jitter()+
   stat_smooth(method="lm")+
+  geom_text(data = coefs_prec, aes(x = 550,  y = 200, label = coef_label), size=3) +
+  geom_text(data = coefs_prec, aes(x = 550,  y = 250, label = corr_label), size=3) +
   xlab(label="Precipitation [mm]")+
   ylab(label="Soil water Content [mm]")+
-  facet_wrap(~scenario, )+
+  theme(strip.text.x = element_text(size = 5))+
+  facet_wrap(~scenario, 
+             labeller=labeller(scenario=label_prec_scenario))+
   theme_bw()
+ggsave(filename="Precipitation_sensitivity.jpg", width = 20, height=12, units = "cm")
