@@ -7,20 +7,25 @@ swc$ET<-Hyytiala_all_day$Evapotr #add ET to output
 cols=c(2:8, 12, 13) #cols to use
 sens<-data.frame("variable"=colnames(swc)[cols], "cor"=NA, "coef"= NA, "index" = NA)
 
-for(i in cols){
+#for(i in cols){
   #calculate sample correlation coefficient
-  sens$cor<-round(cor(swc$change, swc[,i]), 2) #round to two digits
+  #sens$cor<-round(cor(swc$change, swc[,i]), 2) #round to two digits
   #sensitivity coefficient
   #plot((swc$change-mean(swc$change, na.rm=T))/(swc[,i]-mean(swc[,i], na.rm=T)), type="l")
   #sensitivity index
-  (max(swc$change[max(swc[,i]])-min(swc$change[max(swc[,i]]))/max(swc$change[max(swc[,i]])
-}
+ # (max(swc$change[max(swc[,i]])-min(swc$change[max(swc[,i]]))/max(swc$change[max(swc[,i]]))))
+#}
 
 #plot inputs against outputs
+soilwaterchange_obs<-diff(Hyytiala_all_day$SWC20)
+swc$obs_change<-NA
+swc$obs_change[2:length(swc$obs_change)]<-diff(Hyytiala_all_day$SWC20)
 #soil water
-ggplot(data=swc, aes(x=sum, y=change))+
-  geom_smooth( method="lm", fill="blue", color="black")+
-  geom_jitter(color="darkgrey", alpha=0.3)+
+ggplot(data=swc)+
+  geom_smooth(aes(x=sum, y=change, color="modelled"), method="lm" )+
+  geom_smooth(aes(x=obs*1000, y=obs_change*1000, color="observed"),
+              method="lm")+
+  #geom_jitter(color="darkgrey", alpha=0.3)+
   xlab(label="Soil water [mm]")+
   ylab(label="Soil water change [mm]")+
   theme_bw()
@@ -70,7 +75,7 @@ ggplot(data=swc, aes(x=Q, y=change))+
   geom_smooth( method="lm", fill="blue", color="black")+
   geom_jitter(color="darkgrey", alpha=0.3)+
   xlab(label="Groundwater discharge")+
-  ylab(label="Soil water change [mm]")+
+  ylab(label="Soil water Content [mm]")+
   theme_bw()
 
 #srunoff

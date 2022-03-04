@@ -90,7 +90,7 @@ max_swc_H = max(Hyytiala_all_day$SWC20) # max swc in % for Hyytiala
 min_swc_H =min(Hyytiala_all_day$SWC20)
 #test model
 swc<-calc_swc_M(Precip=Hyytiala_all_day$Prec, ET=Hyytiala_all_day$Evapotr,
-                max_swc=max_swc_H*1000, k_winter=0.002, k_summer=0.04, min_swc=min_swc_H*1000, T_u=4, 
+                max_swc=max_swc_H*1000, k_winter=0.005, k_summer=0.005, min_swc=min_swc_H*1000, T_u=4, 
                 T_lf=-7, T_lm=-5, k_m=3, T=Hyytiala_all_day$AirT, init_snowsize=0,
                 ET_change=0, month=Hyytiala_all_day$Month)
 
@@ -110,4 +110,4 @@ ggplot(data=swc)+
   ggtitle(label="Soil water content in Hyytiala", subtitle="1999 to 2001")+
   theme_bw()+
   theme(text=element_text(size=10), legend.position = "bottom")
-ggsave(filename="Hyytiala_sw_obs_sim.jpg",  width = 20, height=12, units = "cm")
+ggsave(filename="Hyytiala_old_sw_obs_sim.jpg",  width = 20, height=12, units = "cm")
