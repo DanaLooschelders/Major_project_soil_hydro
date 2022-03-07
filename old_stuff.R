@@ -80,3 +80,43 @@ calc_swc <- function(P, ET, max_swc, k) {
 swc_H_1999day <- calc_swc(H_1999_day$Prec, H_1999_day$Evapotr, max_swc_H, k)
 swc_N_1997day <- calc_swc(N_1997_day$Prec, N_1997_day$Evapotr, max_swc_N, k)
 swc_N_1999day <- calc_swc(N_1999_day$Prec, N_1999_day$Evapotr, max_swc_N, k)
+
+#test model
+swc<-calc_swc_M(Precip=Hyytiala_all_day$Prec, ET=Hyytiala_all_day$Evapotr,
+                max_swc=max_swc_H*1000, k_winter=0.004, k_summer=0.05, 
+                min_swc=min_swc_H*1000, T_u=4, 
+                T_lf=-7, T_lm=-5, k_m=0, T=Hyytiala_all_day$AirT, init_snowsize=0,
+                ET_summer=0, ET_winter=-1, month=Hyytiala_all_day$Month)
+#add column with date
+swc$date<-Hyytiala_all_day$date
+swc$date<-as.POSIXct(swc$date)
+swc$obs<-Hyytiala_all_day$SWC20 #add observations to sim data
+
+#plot  modelled and observed fluxes as time series
+ggplot(data=swc)+
+  geom_line(aes(x=date, y=sum, color="Simulated"), alpha=0.8)+
+  geom_line(aes(x=date, y=obs*1000, color="Observed"))+
+  labs(color="")+
+  scale_color_manual(values = c("black","darkblue"))+
+  xlab(label="Date")+
+  ylab(label="Soil water content [mm]")+
+  ggtitle(label="Soil water content in Hyytiala", subtitle="1999 to 2001")+
+  theme_bw()+
+  theme(text=element_text(size=10), legend.position = "bottom")
+ggsave(filename="Hyytiala_old_sw_obs_sim.jpg",  width = 20, height=12, units = "cm")
+
+#Hyytiala - calibration
+swc_Hyytiala_calib<-calc_swc_M(Precip=Hyytiala_calibration$Prec, ET=Hyytiala_calibration$Evapotr,
+                               max_swc=max_swc_H*1000, k_winter=0.002, k_summer=0.05, min_swc=min_swc_H*1000, T_u=4, 
+                               T_lf=-7, T_lm=-5, k_m=3, T=Hyytiala_calibration$AirT, init_snowsize=0,
+                               ET_change=0, month=Hyytiala_calibration$Month)
+#Hyytiala validation
+swc_Hyytiala_valid<-calc_swc_M(Precip=Hyytiala_validation$Prec, ET=Hyytiala_validation$Evapotr,
+                               max_swc=max_swc_H*1000, k_winter=0.002, k_summer=0.05, min_swc=min_swc_H*1000, T_u=4, 
+                               T_lf=-7, T_lm=-5, k_m=3, T=Hyytiala_validation$AirT, init_snowsize=0,
+                               ET_change=0, month=Hyytiala_validation$Month)
+#Norunda validation
+swc_Norunds_valid<-calc_swc_M(Precip=Norunda_validation$Prec, ET=Norunda_validation$Evapotr,
+                              max_swc=max_swc_H*1000, k_winter=0.002, k_summer=0.05, min_swc=min_swc_H*1000, T_u=4, 
+                              T_lf=-7, T_lm=-5, k_m=3, T=Norunda_validation$AirT, init_snowsize=0,
+                              ET_change=0, month=Norunda_validation$Month)

@@ -1,5 +1,7 @@
 
-calc_swc_M<-function(M, ET, max_swc, min_swc, k_summer, k_winter, T_u, T_lf, T_lm, k_m, T, Precip, init_snowsize, ET_change, month) {
+calc_swc_M<-function(M, ET, max_swc, min_swc, k_summer, k_winter, T_u, T_lf, 
+                     T_lm, k_m, T, Precip, init_snowsize, ET_summer, ET_winter, 
+                     month) {
   #calculate snowpack
   snowpack<-data.frame("accumulation"=rep(NA, length(T)), 
                        "size"=rep(NA, length(T)),
@@ -37,11 +39,12 @@ calc_swc_M<-function(M, ET, max_swc, min_swc, k_summer, k_winter, T_u, T_lf, T_l
     }
     if (snowpack$size[i] < 0) {
       snowpack$size[i] <- 0
-    }
+    }else{}
   }
   #change ET based on snow cover
-  ET[which(snowpack$size!=0)]<-ET[which(snowpack$size!=0)]+ET_change
-  
+  #ET[month==6|month==7|month==8]<-ET[month==6|month==7|month==8]+ET_summer
+  ET[which(snowpack$size!=0)]<-ET[which(snowpack$size!=0)]+ET_winter
+  ET[which(snowpack$size==0)]<-ET[which(snowpack$size==0)]+ET_summer
   #calculate soil water
   swc<-data.frame("change"=rep(NA, length(snowpack$rain)), 
                   "sum"=rep(NA, length(snowpack$rain)),
@@ -52,7 +55,7 @@ calc_swc_M<-function(M, ET, max_swc, min_swc, k_summer, k_winter, T_u, T_lf, T_l
                   "snowmelt"=snowpack$actual_melt,
                   "snowaccumulation"=snowpack$accumulation,
                   "rain"=snowpack$rain) #output dataframe for the changing soil water
-  swc$sum[1]<- 400 #initial soil water content
+  swc$sum[1]<- Hyytiala_calibration$SWC20[1]*1000 #initial soil water content
   if (swc$sum[1] > max_swc) {
     swc$sum[1] = max_swc
   }
@@ -85,29 +88,7 @@ calc_swc_M<-function(M, ET, max_swc, min_swc, k_summer, k_winter, T_u, T_lf, T_l
   }
   return(swc)}
 
-# define constants
-max_swc_H = max(Hyytiala_all_day$SWC20) # max swc in % for Hyytiala
-min_swc_H =min(Hyytiala_all_day$SWC20)
-#test model
-swc<-calc_swc_M(Precip=Hyytiala_all_day$Prec, ET=Hyytiala_all_day$Evapotr,
-                max_swc=max_swc_H*1000, k_winter=0.005, k_summer=0.005, min_swc=min_swc_H*1000, T_u=4, 
-                T_lf=-7, T_lm=-5, k_m=3, T=Hyytiala_all_day$AirT, init_snowsize=0,
-                ET_change=0, month=Hyytiala_all_day$Month)
 
-#add column with date
-swc$date<-Hyytiala_all_day$date
-swc$date<-as.POSIXct(swc$date)
-swc$obs<-Hyytiala_all_day$SWC20 #add observations to sim data
 
-#plot  modelled and observed fluxes as time series
-ggplot(data=swc)+
-  geom_line(aes(x=date, y=sum, color="Simulated"), alpha=0.8)+
-  geom_line(aes(x=date, y=obs*1000, color="Observed"))+
-  labs(color="")+
-  scale_color_manual(values = c("black","darkblue"))+
-  xlab(label="Date")+
-  ylab(label="Soil water content [mm]")+
-  ggtitle(label="Soil water content in Hyytiala", subtitle="1999 to 2001")+
-  theme_bw()+
-  theme(text=element_text(size=10), legend.position = "bottom")
-ggsave(filename="Hyytiala_old_sw_obs_sim.jpg",  width = 20, height=12, units = "cm")
+plot(swc_Hyytiala_validation$snowaccumulation, type="l")
+range(swc_Hyytiala_validation$snowmelt, na.rm=T)
