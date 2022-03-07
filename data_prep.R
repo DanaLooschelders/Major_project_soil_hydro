@@ -22,6 +22,7 @@ rm(Hyytiala1999day, Hyytiala2000day, Hyytiala2001day) #remove
 Hyytiala_all_day$date<-paste(Hyytiala_all_day$Year, Hyytiala_all_day$Month, Hyytiala_all_day$Day) #combine columns for date
 Hyytiala_all_day$date<-strptime(Hyytiala_all_day$date, format="%Y %m %d") #convert date to proper form
 #create proper date column for Norunds
+Norunda_all_day$Year<-rep(c(1997, 1999, 2001), each=365) #create new year column
 Norunda_all_day$date<-paste(Norunda_all_day$Year, Norunda_all_day$Month, Norunda_all_day$Day) #combine columns for date
 Norunda_all_day$date<-strptime(Norunda_all_day$date, format="%Y %m %d") #convert date to proper form
 Norunda_all_30$date<-paste(Norunda_all_30$Year, Norunda_all_30$Month, Norunda_all_30$Day) #combine columns for date
@@ -30,7 +31,7 @@ Norunda_all_30$date<-strptime(Norunda_all_30$date, format="%Y %m %d") #convert d
 #select certain dataframes in environment
 dfs<-mget(ls(pattern = "30"), .GlobalEnv)
 # convert ET from mmol/m2/s1 to mm/30 min. for 30 min. data 
-for(i in 1:length(dfs)){ dfs[[i]]$Evapotr<-(dfs[[i]]$Evapotr* 10^-3 * 18.02)/1000*30*60} #convert
+for(i in 1:length(dfs)){ dfs[[i]]$Evapotr<-(dfs[[i]]$Evapotr* 10^-3 * 18.02)/1000} #convert
 list2env(dfs ,.GlobalEnv) #unlist again in environment
 rm(dfs) #remove temp list
 
@@ -40,3 +41,4 @@ daily_SWC<-Norunda_all_30 %>%
   summarize(mean = mean(SWC20))
 Norunda_all_day$SWC20<-daily_SWC
 
+plot(Norunda_all_day$Evapotr, type="l")
