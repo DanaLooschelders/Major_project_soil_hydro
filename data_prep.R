@@ -39,6 +39,6 @@ rm(dfs) #remove temp list
 daily_SWC<-Norunda_all_30 %>%
   group_by(date) %>%
   summarize(mean = mean(SWC20))
-Norunda_all_day$SWC20<-daily_SWC
+Norunda_all_day$SWC20<-daily_SWC$mean
 
 plot(Norunda_all_day$Evapotr, type="l")

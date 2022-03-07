@@ -47,7 +47,7 @@ ggplot(data=swc_Norunda_validation)+
   scale_color_manual(values = c("black","darkblue"))+
   xlab(label="Date")+
   ylab(bquote('Soil water content ['*m^3*'/' *m^3*']'))+
-  ggtitle(label="Soil water content in Norunda in 2001")+
+  ggtitle(label="Soil water content in Norunda in 1997")+
   theme_bw()+
   theme(text=element_text(size=10), legend.position = "bottom")
 ggsave(filename="Norunda_validation_sw_obs_sim.jpg",  width = 20, height=12, units = "cm")
