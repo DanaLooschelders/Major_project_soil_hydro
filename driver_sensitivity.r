@@ -67,16 +67,16 @@ ggplot(data=temp_whole)+
   scale_fill_manual(values=c("darkblue", "lightblue"))+
   scale_color_manual(values=c("white", "black"))+
   stat_smooth(aes(x=input, y=output, color=season), method="lm")+
-  geom_text(data = coefs_temp, aes(x = -15,  y = 160, label = coef_label), size=3) +
-  geom_text(data = coefs_temp, aes(x = -15,  y = 190, label = corr_label), size=3) +
+  #geom_text(data = coefs_temp, aes(x = -15,  y = 160, label = coef_label), size=3) +
+  #geom_text(data = coefs_temp, aes(x = -15,  y = 190, label = corr_label), size=3) +
   xlab(label="Temperature [°C]")+
-  ggtitle(label="Change in soil water content with changing temperature")+
+  ggtitle(label="Change in soil water content with changing temperature", subtitle = "For different seasons")+
   ylab(label="Soil water Content [mm]")+
   theme(strip.text.x = element_text(size = 5))+
   facet_wrap(~scenario, 
              labeller=labeller(scenario=label_temp_scenario))+
   theme_bw()
-ggsave(filename="Temperature_sensitivity.jpg", width = 20, height=12, units = "cm")
+ggsave(filename="Temperature_sensitivity_season.jpg", width = 20, height=12, units = "cm")
 
 ####Temperature without season####
 #vary temperature in between -5 and + 5 degrees and check how output changes
@@ -131,6 +131,9 @@ coefs_temp$corr_label<-paste("cor:", coefs_temp$corr) #create annotation for cor
 label_temp_scenario<-paste("Temp. change:", coefs_temp$scenario, "°C")#create label for facet
 names(label_temp_scenario)<-as.character(coefs_temp$scenario)
 
+#calculate standard deviation of correlation
+sd(coefs_temp$corr)
+sd(coefs_temp$coef)
 #plot regression for every scenario
 
 ggplot(data=temp_whole)+
@@ -207,6 +210,11 @@ coefs_prec$coef_label<-paste("lm coef:", coefs_prec$coef)
 coefs_prec$corr_label<-paste("cor:", coefs_prec$corr)
 label_prec_scenario<-paste("Prec. change:", coefs_prec$scenario*100, "%")#create label for facet
 names(label_prec_scenario)<-as.character(coefs_prec$scenario)
+
+#calculate standard deviation of correlation
+sd(coefs_prec$corr)
+sd(coefs_prec$coef)
+
 #plot regression for every scenario
 ggplot(data=prec_whole, aes(x=input, y=output))+
   geom_jitter()+
