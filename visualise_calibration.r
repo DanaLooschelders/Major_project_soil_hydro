@@ -27,8 +27,8 @@ ggsave(filename="Hyytiala_sw_content.jpg", width = 20, height=12, units = "cm")
 plot(swc$sum/h, Hyytiala_calibration$SWC20, xlim=c(0,0.55), ylim=c(0,0.55))
 
 #plot  modelled and observed fluxes as time series
-ggplot(data=swc)+
-  geom_line(aes(x=date, y=sum/1000, color="Simulatated"), alpha=0.8)+
+ggplot(data=swc_Hyytiala_calibration)+
+  geom_line(aes(x=date, y=sum/200, color="Simulatated"), alpha=0.8)+
   geom_line(aes(x=date, y=obs, color="Observed"))+
     labs(color="")+
   scale_color_manual(values = c("black","darkblue"))+
@@ -59,18 +59,18 @@ swc$obs_change[2:length(swc$obs_change)]<-diff(Hyytiala_calibration$SWC20)
 plot(soilwaterchange_obs, type="l")
 mean(abs(soilwaterchange_obs))
 
-max(swc$change/1000)
+max(swc$change/200)
 #plot modelled and observed changes together with rain
 ggplot()+
-  geom_line(data=swc, aes(x=date, y=change/1000, col="modelled"),show.legend = T)+
+  geom_line(data=swc, aes(x=date, y=change/200, col="modelled"),show.legend = T)+
   geom_line(data=swc, aes(x=date, y=obs_change, col="observed"))+
   #geom_line(data=swc, aes(x=date, y=rain/100, col="rain"), alpha=0.4)+
   theme_bw()
 #plot modelled and obs soil water together with rain
 ggplot(data=swc)+
-  geom_line(aes(x=date, y=sum/1000, col="modelled"))+
+  geom_line(aes(x=date, y=sum/200, col="modelled"))+
   geom_line(aes(x=date, y=obs, col="obs"))+
-  geom_line(aes(x=date, y=rain/100, col="rain"))+
+  geom_line(aes(x=date, y=rain/200, col="rain"))+
   geom_hline(yintercept = max_swc_H)+
   theme_bw()
 

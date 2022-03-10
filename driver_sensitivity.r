@@ -16,9 +16,9 @@ colnames(temp_input)<-as.character(temp_var) #set colnames
 for(i in 1:length(temp_var)){
   #call function
   temp_swc<-calc_swc_M(Precip=Hyytiala_validation$Prec, ET=Hyytiala_validation$Evapotr,
-                                      max_swc=max_swc_H*1000, k_winter=0.003, k_summer=0.02, 
-                                      min_swc=min_swc_H*1000, T_u=4, 
-                                      T_lf=-7, T_lm=-5, k_m=0.5, T=Hyytiala_validation$AirT+i, #scale temp
+                                      max_swc=max_swc_H*200, k_winter=0.02, k_summer=0.02, 
+                                      min_swc=min_swc_H*200, T_u=5, 
+                                      T_lf=-4, T_lm=-5, k_m=0.5, T=Hyytiala_validation$AirT+i, #scale temp
                                       init_snowsize=0,
                                       ET_summer=0, ET_winter=0, month=Hyytiala_validation$Month)
   
@@ -92,9 +92,9 @@ colnames(temp_input)<-as.character(temp_var) #set colnames
 for(i in 1:length(temp_var)){
   #call function
   temp_swc<-calc_swc_M(Precip=Hyytiala_validation$Prec, ET=Hyytiala_validation$Evapotr,
-                       max_swc=max_swc_H*1000, k_winter=0.003, k_summer=0.02, 
-                       min_swc=min_swc_H*1000, T_u=4, 
-                       T_lf=-7, T_lm=-5, k_m=0.5, T=Hyytiala_validation$AirT+i, #scale temp
+                       max_swc=max_swc_H*200, k_winter=0.02, k_summer=0.02, 
+                       min_swc=min_swc_H*200, T_u=5, 
+                       T_lf=-4, T_lm=-5, k_m=0.5, T=Hyytiala_validation$AirT+i, #scale temp
                        init_snowsize=0,
                        ET_summer=0, ET_winter=0, month=Hyytiala_validation$Month)
   
@@ -167,13 +167,14 @@ colnames(prec_input)<-as.character(prec_var) #set colnames
 
 for(i in 1:length(prec_var)){
   #call function
-  prec_swc<-calc_swc_M(Precip=Hyytiala_validation$Prec*i,#scale precipitation
-                                      ET=Hyytiala_validation$Evapotr,
-                                      max_swc=max_swc_H*1000, k_winter=0.003, k_summer=0.02, 
-                                      min_swc=min_swc_H*1000, T_u=4, 
-                                      T_lf=-7, T_lm=-5, k_m=0.5, T=Hyytiala_validation$AirT, 
-                                      init_snowsize=0,
-                                      ET_summer=0, ET_winter=0, month=Hyytiala_validation$Month)
+  prec_swc<-calc_swc_M(Precip=Hyytiala_validation$Prec*i, #scale precipitation
+                       ET=Hyytiala_validation$Evapotr,
+                       max_swc=max_swc_H*200, k_winter=0.02, k_summer=0.02, 
+                       min_swc=min_swc_H*200, T_u=5, 
+                       T_lf=-4, T_lm=-5, k_m=0.5, T=Hyytiala_validation$AirT+i, #scale temp
+                       init_snowsize=0,
+                       ET_summer=0, ET_winter=0, month=Hyytiala_validation$Month)
+  
   
   prec_output[,i]<-prec_swc$sum #write in output
   prec_input[,i]<-Hyytiala_validation$Prec*i
@@ -221,8 +222,8 @@ ggplot(data=prec_whole, aes(x=input, y=output))+
   stat_smooth(method="lm")+
   ggtitle(label="Change in soil water content with changing Precipitation",
           subtitle = "In Hyytiälä in 2001")+
-  geom_text(data = coefs_prec, aes(x = 500,  y = 200, label = coef_label), size=3) +
-  geom_text(data = coefs_prec, aes(x = 500,  y = 250, label = corr_label), size=3) +
+  geom_text(data = coefs_prec, aes(x = 500,  y = 40, label = coef_label), size=3) +
+  geom_text(data = coefs_prec, aes(x = 500,  y = 60, label = corr_label), size=3) +
   xlab(label="Precipitation [mm]")+
   ylab(label="Soil water Content [mm]")+
   theme(strip.text.x = element_text(size = 5))+

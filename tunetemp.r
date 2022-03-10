@@ -41,38 +41,43 @@ ggsave(filename="RMSE_k_m.jpg", width = 20, height=12, units = "cm")
 range(Hyytiala_all_day$AirT)
 
 #####tune for all variables#####
-#tuvalues<-seq(-2, 7, by=1) #max temp above which is precipitation
-#tlfvalues<-seq(-9, 2, by=1) #lower limit below preci will be snow
-#tlmvalues<-seq(-15, 2, by=1) #temp limit above which snow can melt
-kmvalue<-seq(0.5, 5, by=0.5) #rate snow melts
-k_winter<-seq(0, 0.01, by=0.001 ) #k value for winter
-k_summer<-seq(0, 0.15, by=0.01 ) #k value for summer
+tuvalues<-seq(0, 5, by=1) #max temp above which is precipitation
+tlfvalues<-seq(-5, 2, by=1) #lower limit below preci will be snow
+tlmvalues<-seq(-5, 2, by=1) #temp limit above which snow can melt
+kmvalue<-seq(0.5, 2, by=0.5) #rate snow melts
+k_winter<-seq(0.02, 0.1, by=0.02 ) #k value for winter
+k_summer<-seq(0.02, 0.15, by=0.02 ) #k value for summer
+#kmvalue<-seq(0, 2, by=0.5) #rate snow melts
+#k_winter<-seq(0, 2, by=0.5 ) #k value for winter
+#k_summer<-seq(0, 2, by=0.5 ) #k value for summer
 #e_winter<-seq(-1, 0, by=0.1) #ET decrease for winter 
 #e_summer<-seq(0, 1, by=0.1) #ET increase for summer
 
 #optimal_snow<-expand.grid(tuvalues, tlfvalues, tlmvalues, kmvalue, kvalues)
-optimal_snow<-expand.grid(kmvalue, k_winter, k_summer)
+optimal_snow<-expand.grid(kmvalue, k_winter, k_summer,tuvalues, tlfvalues, tlmvalues)
 #colnames(optimal_snow)<-c("tuvalues", "tlfvalues", "tlmvalues", "kmvalue", "kvalues")
-colnames(optimal_snow)<-c("kmvalue", "k_winter", "k_summer")
+colnames(optimal_snow)<-c("kmvalue", "k_winter", "k_summer", "tuvalues", "tlfvalues", "tlmvalues")
 optimal_snow$RMSE<-NA
 
 for(i in 1:dim(optimal_snow)[1]){
     #model once with every tempvalue
     swc_temp<-calc_swc_M(Precip=Hyytiala_calibration$Prec, ET=Hyytiala_calibration$Evapotr,
-                         max_swc=max_swc_H*1000, k_winter=optimal_snow$k_winter[i], 
-                         k_summer=optimal_snow$k_summer[i], min_swc=min_swc_H*1000, T_u=4, 
-                         T_lf=-7, T_lm=-5, k_m=optimal_snow$kmvalue[i], T=Hyytiala_calibration$AirT, init_snowsize=0,
+                         max_swc=max_swc_H*200, k_winter=optimal_snow$k_winter[i], 
+                         k_summer=optimal_snow$k_summer[i], min_swc=min_swc_H*200, 
+                         T_u=optimal_snow$tuvalues[i], 
+                         T_lf=optimal_snow$tlfvalues[i], T_lm=optimal_snow$tlmvalues[i], 
+                         k_m=optimal_snow$kmvalue[i], 
+                         T=Hyytiala_calibration$AirT, init_snowsize=0,
                          ET_summer=0, ET_winter=0, 
                          month=Hyytiala_calibration$Month) 
     
-    swc_temp$sum<-swc_temp$sum/1000
+    swc_temp$sum<-swc_temp$sum/200
     swc_temp$obs<-Hyytiala_calibration$SWC20 #add observations to sim data
     #calculate RMSE for model
     optimal_snow$RMSE[i]<-sqrt(mean((swc_temp$obs - swc_temp$sum)^2))
   }
 
 #dim(optimal_snow)[1]/10*0.69/60/60 was 2.45
-
 optimal_values<-optimal_snow[which.min(optimal_snow$RMSE),]
 optimal_values_order<-optimal_snow[order(optimal_snow$RMSE),]
 #optimal_values_nonzero<-optimal_values_order[optimal_values_order$kmvalue>0&optimal_values_order$kvalues>0,]

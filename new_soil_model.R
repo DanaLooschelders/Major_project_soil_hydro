@@ -55,7 +55,7 @@ calc_swc_M<-function(M, ET, max_swc, min_swc, k_summer, k_winter, T_u, T_lf,
                   "snowmelt"=snowpack$actual_melt,
                   "snowaccumulation"=snowpack$accumulation,
                   "rain"=snowpack$rain) #output dataframe for the changing soil water
-  swc$sum[1]<- Hyytiala_calibration$SWC20[1]*1000 #initial soil water content
+  swc$sum[1]<- Hyytiala_calibration$SWC20[1]*200 #initial soil water content
   if (swc$sum[1] > max_swc) {
     swc$sum[1] = max_swc
   }

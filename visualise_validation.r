@@ -28,7 +28,7 @@ plot(swc$sum/h, Hyytiala_validation$SWC20, xlim=c(0,0.55), ylim=c(0,0.55))
 
 #HYYTIALÖA plot  modelled and observed fluxes as time series
 ggplot(data=swc_Hyytiala_validation)+
-  geom_line(aes(x=date, y=sum/1000, color="Simulatated"), alpha=0.8)+
+  geom_line(aes(x=date, y=sum/200, color="Simulatated"), alpha=0.8)+
   geom_line(aes(x=date, y=obs, color="Observed"))+
   labs(color="")+
   scale_color_manual(values = c("black","darkblue"))+
@@ -37,11 +37,11 @@ ggplot(data=swc_Hyytiala_validation)+
   ggtitle(label="Soil water content in Hyytiala in 2001")+
   theme_bw()+
   theme(text=element_text(size=10), legend.position = "bottom")
-ggsave(filename="Hyytiala_validation_sw_obs_sim.jpg",  width = 20, height=12, units = "cm")
+ggsave(filename="Hyytiala_validation_sw_obs_sim_square.jpg",  width = 20, height=10, units = "cm")
 
 #NORUNDA plot  modelled and observed fluxes as time series
 ggplot(data=swc_Norunda_validation)+
-  geom_line(aes(x=date, y=sum/1000, color="Simulatated"), alpha=0.8)+
+  geom_line(aes(x=date, y=sum/200, color="Simulatated"), alpha=0.8)+
   geom_line(aes(x=date, y=obs, color="Observed"))+
   labs(color="")+
   scale_color_manual(values = c("black","darkblue"))+
@@ -50,7 +50,7 @@ ggplot(data=swc_Norunda_validation)+
   ggtitle(label="Soil water content in Norunda in 1997")+
   theme_bw()+
   theme(text=element_text(size=10), legend.position = "bottom")
-ggsave(filename="Norunda_validation_sw_obs_sim.jpg",  width = 20, height=12, units = "cm")
+ggsave(filename="Norunda_validation_sw_obs_sim.jpg",  width = 20, height=10, units = "cm")
 
 
 #plot linear regression
@@ -73,16 +73,16 @@ swc_Hyytiala_validation$obs_change[2:length(swc_Hyytiala_validation$obs_change)]
 plot(soilwaterchange_obs, type="l")
 mean(abs(soilwaterchange_obs))
 
-max(swc$change/1000)
+max(swc$change/200)
 #plot modelled and observed changes together with rain
 ggplot()+
-  geom_line(data=swc_Hyytiala_validation, aes(x=date, y=change/1000, col="modelled"),show.legend = T)+
+  geom_line(data=swc_Hyytiala_validation, aes(x=date, y=change/200, col="modelled"),show.legend = T)+
   geom_line(data=swc_Hyytiala_validation, aes(x=date, y=obs_change, col="observed"))+
   #geom_line(data=swc_Hyytiala_validation, aes(x=date, y=rain/100, col="rain"), alpha=0.4)+
   theme_bw()
 #plot modelled and obs soil water together with rain
 ggplot(data=swc_Hyytiala_validation)+
-  geom_line(aes(x=date, y=sum/1000, col="modelled"))+
+  geom_line(aes(x=date, y=sum/200, col="modelled"))+
   geom_line(aes(x=date, y=obs, col="obs"))+
   geom_line(aes(x=date, y=rain/100, col="rain"))+
   geom_hline(yintercept = max_swc_H)+
