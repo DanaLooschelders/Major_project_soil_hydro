@@ -31,26 +31,40 @@ ggplot(data=swc_Hyytiala_validation)+
   geom_line(aes(x=date, y=sum/200, color="Simulatated"), alpha=0.8)+
   geom_line(aes(x=date, y=obs, color="Observed"))+
   labs(color="")+
-  scale_color_manual(values = c("black","darkblue"))+
+  scale_color_manual(values = c("black","#1b9e77"))+
   xlab(label="Date")+
   ylab(bquote('Soil water content ['*m^3*'/' *m^3*']'))+
   ggtitle(label="Soil water content in Hyytiala in 2001")+
   theme_bw()+
   theme(text=element_text(size=10), legend.position = "bottom")
-ggsave(filename="Hyytiala_validation_sw_obs_sim_square.jpg",  width = 20, height=10, units = "cm")
+ggsave(filename="Hyytiala_validation_sw_obs_sim.jpg",  width = 10, height=10, units = "cm")
+
+#HYYTIALÖA plot with more Prec modelled and observed fluxes as time series
+ggplot(data=swc_Hyytiala_validation_interc)+
+  geom_line(aes(x=date, y=sum/200, color="Simulatated"), alpha=0.8)+
+  geom_line(aes(x=date, y=obs, color="Observed"))+
+  labs(color="")+
+  scale_color_manual(values = c("black","#1b9e77"))+
+  xlab(label="Date")+
+  ylab(bquote('Soil water content ['*m^3*'/' *m^3*']'))+
+  ggtitle(label="Soil water content in Hyytiala in 2001",
+          subtitle = "Precipitation increased by 0.5 mm/d")+
+  theme_bw()+
+  theme(text=element_text(size=10), legend.position = "bottom")
+ggsave(filename="Hyytiala_validation_interception_sw_obs_sim.jpg",  width = 10, height=10, units = "cm")
 
 #NORUNDA plot  modelled and observed fluxes as time series
 ggplot(data=swc_Norunda_validation)+
   geom_line(aes(x=date, y=sum/200, color="Simulatated"), alpha=0.8)+
   geom_line(aes(x=date, y=obs, color="Observed"))+
   labs(color="")+
-  scale_color_manual(values = c("black","darkblue"))+
+  scale_color_manual(values = c("black","#1b9e77"))+
   xlab(label="Date")+
   ylab(bquote('Soil water content ['*m^3*'/' *m^3*']'))+
   ggtitle(label="Soil water content in Norunda in 1997")+
   theme_bw()+
   theme(text=element_text(size=10), legend.position = "bottom")
-ggsave(filename="Norunda_validation_sw_obs_sim.jpg",  width = 20, height=10, units = "cm")
+ggsave(filename="Norunda_validation_sw_obs_sim_.jpg",  width = 10, height=10, units = "cm")
 
 
 #plot linear regression

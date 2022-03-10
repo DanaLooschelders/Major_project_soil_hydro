@@ -188,7 +188,7 @@ prec_whole<-data.frame("input"=prec_input_long$value,
                        "scenario"=prec_output_long$variable)
 
 #plot
-ggplot(data=prec_output_long, aes(y=value, x=date, col=as.factor(variable)))+
+ggplot(data=prec_output_long, aes(y=value/200, x=date, col=as.factor(variable)))+
   geom_line()+
   theme_bw()
 
@@ -230,4 +230,16 @@ ggplot(data=prec_whole, aes(x=input, y=output))+
   facet_wrap(~scenario, 
              labeller=labeller(scenario=label_prec_scenario))+
   theme_bw()
+ggsave(filename="Precipitation_sensitivity.jpg", width = 20, height=12, units = "cm")
+
+#plot time series for only some scenarios
+prec_long_some<-prec_output_long[prec_output_long$variable==-0.1|prec_output_long$variable==0.1|prec_output_long$variable==0,]
+ggplot(data=prec_long_some, aes(y=value/200, x=date, col=as.factor(variable)))+
+  ggtitle(label="Change in soil water content with changing Precipitation",
+          subtitle = "In Hyytiälä in 2001")+
+  xlab(label="Precipitation [mm]")+
+  ylab(label="Soil water Content [mm]")+
+  geom_line()+
+  theme_bw()+
+  scale_color_manual("Precipitation \nscenario", values=c("#1b9e77","#d95f02","#7570b3"))
 ggsave(filename="Precipitation_sensitivity.jpg", width = 20, height=12, units = "cm")
