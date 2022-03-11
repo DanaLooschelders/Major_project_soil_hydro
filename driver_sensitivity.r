@@ -153,6 +153,19 @@ ggplot(data=temp_whole)+
   theme_bw()
 ggsave(filename="Temperature_sensitivity.jpg", width = 20, height=12, units = "cm")
 
+#plot time series for only some scenarios
+temp_long_some<-temp_output_long[temp_output_long$variable==-5|temp_output_long$variable==5|temp_output_long$variable==0,]
+ggplot(data=temp_long_some, aes(y=value/200, x=date, col=as.factor(variable)))+
+  ggtitle(label="Change in soil water content \nwith changing temperature",
+          subtitle = "In Hyytiälä in 2001")+
+  xlab(label="Date")+
+  ylab(bquote('Soil water content ['*m^3*'/' *m^3*']'))+
+  geom_line()+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 90), legend.position = "bottom")+ 
+  scale_color_manual("Temperature change in [°C]", values=c("#1b9e77","#d95f02","#7570b3"))
+ggsave(filename="Temperature_ts_sensitivity.jpg", width = 10, height=10, units = "cm")
+
 ####Precipitation####
 #vary precipitation in between -50% and + 50% 
 prec_var<-round(seq(-0.7, 0.7, by=0.1), 1)
@@ -233,13 +246,17 @@ ggplot(data=prec_whole, aes(x=input, y=output))+
 ggsave(filename="Precipitation_sensitivity.jpg", width = 20, height=12, units = "cm")
 
 #plot time series for only some scenarios
-prec_long_some<-prec_output_long[prec_output_long$variable==-0.1|prec_output_long$variable==0.1|prec_output_long$variable==0,]
+prec_long_some<-prec_output_long[prec_output_long$variable==-0.5|prec_output_long$variable==0.5|prec_output_long$variable==0,]
+
 ggplot(data=prec_long_some, aes(y=value/200, x=date, col=as.factor(variable)))+
-  ggtitle(label="Change in soil water content with changing Precipitation",
+  ggtitle(label="Change in soil water content \nwith changing precipitation",
           subtitle = "In Hyytiälä in 2001")+
-  xlab(label="Precipitation [mm]")+
-  ylab(label="Soil water Content [mm]")+
+  xlab(label="Date")+
+  ylab(bquote('Soil water content ['*m^3*'/' *m^3*']'))+
   geom_line()+
   theme_bw()+
-  scale_color_manual("Precipitation \nscenario", values=c("#1b9e77","#d95f02","#7570b3"))
-ggsave(filename="Precipitation_sensitivity.jpg", width = 20, height=12, units = "cm")
+  theme(axis.text.x = element_text(angle = 90), legend.position = "bottom")+        
+  scale_color_manual("Precipitation change in [%]", values=c("#1b9e77","#d95f02","#7570b3"),
+                     breaks=c("-0.5", "0", "0.5"), labels=c("-50", "0", "50"))
+
+ggsave(filename="Precipitation_ts_sensitivity.jpg", width = 10, height=10, units = "cm")
